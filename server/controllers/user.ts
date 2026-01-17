@@ -1,8 +1,11 @@
 import type { Request, Response } from "express";
 import { getUsers } from "@/services/user.service";
 
-export const getAllUsers = (req: Request, res: Response) => {
+export const getAllUsers = async (req: Request, res: Response) => {
   try {
+    // Simulate network delay
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
     const result = getUsers(req.query);
     res.json(result);
   } catch (error: any) {

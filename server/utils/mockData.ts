@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { User } from "../viewmodels/user.js";
+import { User } from "@/viewmodels/user.js";
 
 // Helper to generate mock data
 export const generateMockData = (count: number): User[] => {
