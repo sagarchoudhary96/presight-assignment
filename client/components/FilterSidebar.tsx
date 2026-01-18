@@ -34,7 +34,7 @@ export function FilterSidebar({
   }
 
   return (
-    <aside className="w-64 space-y-8 p-4 border rounded-xl bg-card">
+    <aside className="w-64 space-y-8 p-4 flex flex-col h-full border rounded-xl bg-card">
       <section className="space-y-4">
         <div className="flex items-center justify-between">
           <h3 className="font-semibold text-sm">Nationalities</h3>
@@ -71,7 +71,7 @@ export function FilterSidebar({
         </div>
       </section>
 
-      <section className="space-y-4">
+      <section className="space-y-4 flex-1 overflow-hidden flex flex-col">
         <div className="flex items-center justify-between">
           <h3 className="font-semibold text-sm">Top Hobbies</h3>
           {filterParams.hobby && (
@@ -85,7 +85,7 @@ export function FilterSidebar({
             </Button>
           )}
         </div>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-1 overflow-y-auto flex-wrap gap-2">
           {filters?.topHobbies.map((hobby) => (
             <Button
               key={hobby.name}
