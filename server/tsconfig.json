@@ -10,12 +10,10 @@
     "skipLibCheck": true,
     "outDir": "./dist",
     "rootDir": "./",
+    "sourceMap": true,
     "resolveJsonModule": true,
     "allowImportingTsExtensions": false,
-    "typeRoots": ["./node_modules/@types", "./types"],
-    "paths": {
-      "@/*": ["./*"]
-    }
+    "typeRoots": ["./node_modules/@types", "./types"]
   },
   "include": ["**/*"],
   "exclude": ["node_modules"]

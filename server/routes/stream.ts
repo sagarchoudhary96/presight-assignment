@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { streamText } from "@/controllers/stream";
+import { streamText } from "../controllers/stream";
 
 const router = Router();
 

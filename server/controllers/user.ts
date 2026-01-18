@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { getFilterMetadata, getUsers } from "@/services/user.service";
+import { getFilterMetadata, getUsers } from "../services/user.service";
 
 export const getAllUsers = async (req: Request, res: Response) => {
   try {

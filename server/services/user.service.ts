@@ -1,5 +1,5 @@
-import { mockUsers } from "@/utils/mockData";
-import { User } from "@/viewmodels/user";
+import { mockUsers } from "../utils/mockData";
+import { User } from "../viewmodels/user";
 
 export interface GetUsersParams {
   page?: string | number;

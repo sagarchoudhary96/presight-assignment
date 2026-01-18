@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { User } from "@/viewmodels/user";
+import { User } from "../viewmodels/user";
 
 const hobbiesList = [
   "Reading",

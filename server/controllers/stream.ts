@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { generateStreamText } from "@/services/stream.service";
+import { generateStreamText } from "../services/stream.service";
 
 export const streamText = async (req: Request, res: Response) => {
   try {

@@ -1,7 +1,7 @@
 import { Worker } from "worker_threads";
 import path from "path";
 import { fileURLToPath } from "url";
-import { io } from "@/index";
+import { getIO } from "../utils/webSocket";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -32,7 +32,7 @@ export const enqueueTask = (taskId: string, payload?: any) => {
       task.result = result;
 
       // Notify via WebSocket
-      io.emit("task:completed", { taskId, result });
+      getIO().emit("task:completed", { taskId, result });
     }
   });
 

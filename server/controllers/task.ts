@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { enqueueTask } from "@/services/task.service";
+import { enqueueTask } from "../services/task.service";
 import crypto from "crypto";
 
 export const createTask = (req: Request, res: Response) => {
