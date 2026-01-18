@@ -1,4 +1,4 @@
-import { generateMockData } from "@/utils/mockData";
+import { mockUsers } from "@/utils/mockData";
 import { User } from "@/viewmodels/user";
 
 export interface GetUsersParams {
@@ -6,6 +6,7 @@ export interface GetUsersParams {
   limit?: string | number;
   search?: string;
   nationality?: string;
+  hobby?: string;
   ageMin?: string | number;
   ageMax?: string | number;
 }
@@ -20,12 +21,18 @@ export interface GetUsersResponse {
   };
 }
 
+export interface UsersFilterMetadata {
+  nationalities: string[];
+  topHobbies: { name: string; count: number }[];
+}
+
 export const getUsers = (params: GetUsersParams): GetUsersResponse => {
   let {
     page = 1,
     limit = 10,
     search = "",
     nationality = "",
+    hobby = "",
     ageMin,
     ageMax,
   } = params;
@@ -33,16 +40,15 @@ export const getUsers = (params: GetUsersParams): GetUsersResponse => {
   const pageNum = parseInt(page as string);
   const limitNum = parseInt(limit as string);
 
-  let filteredUsers = generateMockData(100);
+  let filteredUsers = [...mockUsers];
 
-  // Search (matches first_name, last_name, or nationality)
+  // Search (matches first_name, last_name)
   if (search) {
     const searchQuery = search.toLowerCase();
     filteredUsers = filteredUsers.filter(
       (user) =>
         user.first_name.toLowerCase().includes(searchQuery) ||
-        user.last_name.toLowerCase().includes(searchQuery) ||
-        user.nationality.toLowerCase().includes(searchQuery)
+        user.last_name.toLowerCase().includes(searchQuery)
     );
   }
 
@@ -50,6 +56,13 @@ export const getUsers = (params: GetUsersParams): GetUsersResponse => {
   if (nationality) {
     filteredUsers = filteredUsers.filter(
       (user) => user.nationality.toLowerCase() === nationality.toLowerCase()
+    );
+  }
+
+  // Hobby Filter
+  if (hobby) {
+    filteredUsers = filteredUsers.filter((user) =>
+      user.hobbies.some((h) => h.toLowerCase() === hobby.toLowerCase())
     );
   }
 
@@ -79,5 +92,28 @@ export const getUsers = (params: GetUsersParams): GetUsersResponse => {
       limit: limitNum,
       totalPages,
     },
+  };
+};
+
+export const getFilterMetadata = (): UsersFilterMetadata => {
+  const nationalities = [
+    ...new Set(mockUsers.map((u) => u.nationality)),
+  ].sort();
+
+  const hobbyCounts: Record<string, number> = {};
+  mockUsers.forEach((user) => {
+    user.hobbies.forEach((hobby) => {
+      hobbyCounts[hobby] = (hobbyCounts[hobby] || 0) + 1;
+    });
+  });
+
+  const topHobbies = Object.entries(hobbyCounts)
+    .map(([name, count]) => ({ name, count }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 20);
+
+  return {
+    nationalities,
+    topHobbies,
   };
 };
