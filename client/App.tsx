@@ -5,7 +5,8 @@ import { FilterSidebar } from "@/components/FilterSidebar";
 import { SearchBox } from "@/components/SearchBox";
 import { Button } from "@/components/ui/button";
 import { StreamingDisplay } from "@/components/StreamingDisplay";
-import { XIcon, Users, FileText } from "lucide-react";
+import { TaskTracker } from "@/components/TaskTracker";
+import { XIcon, Users, FileText, LayoutGrid } from "lucide-react";
 import type { UserFilterParams } from "@/types/user";
 
 const queryClient = new QueryClient({
@@ -24,7 +25,9 @@ const initialFilters: UserFilterParams = {
 };
 
 function App() {
-  const [view, setView] = useState<"directory" | "stream">("directory");
+  const [view, setView] = useState<"directory" | "stream" | "tasks">(
+    "directory"
+  );
   const [filters, setFilters] = useState<UserFilterParams>(initialFilters);
 
   const updateFilter = useCallback(
@@ -48,12 +51,16 @@ function App() {
                 <h1 className="text-4xl font-black tracking-tight bg-linear-to-r from-primary to-primary/60 bg-clip-text text-transparent">
                   {view === "directory"
                     ? "User Directory"
-                    : "Response Streamer"}
+                    : view === "stream"
+                    ? "Response Streamer"
+                    : "Task Processor"}
                 </h1>
                 <p className="text-muted-foreground font-medium">
                   {view === "directory"
                     ? "Explore our community with precision filtering."
-                    : "Real-time HTTP body streaming with progressive rendering."}
+                    : view === "stream"
+                    ? "Real-time HTTP body streaming with progressive rendering."
+                    : "Background worker tasks with WebSocket notifications."}
                 </p>
               </div>
 
@@ -73,6 +80,14 @@ function App() {
                   className="gap-2 font-bold px-4"
                 >
                   <FileText className="h-4 w-4" /> Streamer
+                </Button>
+                <Button
+                  variant={view === "tasks" ? "default" : "ghost"}
+                  size="sm"
+                  onClick={() => setView("tasks")}
+                  className="gap-2 font-bold px-4"
+                >
+                  <LayoutGrid className="h-4 w-4" /> Tasks
                 </Button>
               </div>
             </div>
@@ -116,9 +131,13 @@ function App() {
                 <UserList {...filters} onClearFilters={clearFilters} />
               </div>
             </div>
-          ) : (
+          ) : view === "stream" ? (
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 flex-1 flex flex-col overflow-hidden">
               <StreamingDisplay />
+            </div>
+          ) : (
+            <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 flex-1 flex flex-col overflow-hidden">
+              <TaskTracker />
             </div>
           )}
         </div>
