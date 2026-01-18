@@ -18,6 +18,11 @@ export function SearchBox({ value, onChange }: SearchBoxProps) {
     return () => clearTimeout(timer);
   }, [searchQuery, onChange]);
 
+  useEffect(() => {
+    if (value === searchQuery) return;
+    setSearchQuery(value);
+  }, [value]);
+
   return (
     <div className="relative group">
       <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
