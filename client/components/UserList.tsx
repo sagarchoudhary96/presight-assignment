@@ -3,17 +3,34 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import UserCard from "./UserCard";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Loader2 } from "lucide-react";
+import { Loader2, SearchX } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 import { userService } from "@/services/user.service";
+import type { UserFilterParams } from "@/types/user";
 
-export function UserList() {
+interface UserListProps extends UserFilterParams {
+  onClearFilters?: () => void;
+}
+
+export function UserList({
+  search = "",
+  nationality = "",
+  hobby = "",
+  onClearFilters,
+}: UserListProps) {
   const parentRef = useRef<HTMLDivElement>(null);
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
     useInfiniteQuery({
-      queryKey: ["users"],
-      queryFn: ({ pageParam = 1 }) => userService.getUsers(pageParam),
+      queryKey: ["users", { search, nationality, hobby }],
+      queryFn: ({ pageParam = 1 }) =>
+        userService.getUsers({
+          page: pageParam as number,
+          search,
+          nationality,
+          hobby,
+        }),
       initialPageParam: 1,
       getNextPageParam: (lastPage) => {
         if (lastPage.pagination.page < lastPage.pagination.totalPages) {
@@ -75,10 +92,31 @@ export function UserList() {
     );
   }
 
+  if (status === "success" && allUsers.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center p-20 border-2 border-dashed rounded-2xl animate-in fade-in zoom-in duration-500 min-h-100">
+        <div className="h-20 w-20 bg-muted/50 rounded-full flex items-center justify-center mb-6">
+          <SearchX className="h-10 w-10 text-muted-foreground/40" />
+        </div>
+        <h3 className="text-xl font-bold mb-2">No matching users</h3>
+        <p className="text-muted-foreground text-center max-w-xs mb-8 font-medium">
+          Try adjusting your search or filters to find what you're looking for.
+        </p>
+        <Button
+          variant="outline"
+          onClick={onClearFilters}
+          className="rounded-full px-8 hover:bg-primary hover:text-primary-foreground transition-all"
+        >
+          Clear all filters
+        </Button>
+      </div>
+    );
+  }
+
   return (
     <div
       ref={parentRef}
-      className="h-150 overflow-auto border rounded-md"
+      className="h-full overflow-auto border rounded-md"
       style={{
         contain: "strict",
       }}
